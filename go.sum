@@ -1,0 +1,8 @@
+github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f h1:UWGE8Vi+1Agt0lrvnd7UsmvwqWKRzb9byK9iQmsbY0Y=
+github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f/go.mod h1:u+9Snq0w+ZdYKi8BBoaxnEwWu0fY4Kvu9ByFpM51t1s=
+github.com/machinebox/graphql v0.2.2 h1:dWKpJligYKhYKO5A2gvNhkJdQMNZeChZYyBbrZkBZfo=
+github.com/machinebox/graphql v0.2.2/go.mod h1:F+kbVMHuwrQ5tYgU9JXlnskM8nOaFxCAEolaQybkjWA=
+github.com/matryer/is v1.4.0 h1:sosSmIWwkYITGrxZ25ULNDeKiMNzFSr4V/eqBQP0PeE=
+github.com/matryer/is v1.4.0/go.mod h1:8I/i5uYgLzgsgEloJE1U6xx5HkBQpAZvepWuujKwMRU=
+github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
+github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
