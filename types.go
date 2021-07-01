@@ -31,8 +31,11 @@ type SignInInput struct {
 }
 
 type CUser struct {
-	Slug    string `json:"slug"`
-	Balance int    `json:"coinBalance"`
+	Slug             string `json:"slug"`
+	Email            string `json:"email"`
+	EthereumAddress  string `json:"ethereumAddress"`
+	AvailableBalance string `json:"availableBalance"`
+	Nickname         string `json:"nickname"`
 }
 
 type TError struct {
