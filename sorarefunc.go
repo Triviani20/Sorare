@@ -65,42 +65,81 @@ func readSalt(salt []byte) (s Salt) {
 func setPayload() (payload TUser) {
 
 	salt, _, _ := getSalt() //salt in bytes
-	s := readSalt(salt)     //salt in struct
+	//fmt.Printf("COOKIE: %+v\n", c)
+	s := readSalt(salt) //salt in struct
 
 	payload.Email = os.Getenv("BACKEND_USER")
 	payload.Password = os.Getenv("BACKEND_PASSWORD")
 	hash, _ := bcrypt.Hash(payload.Password, s.Salt) //hash password
 	payload.Password = hash
+	payload.ClientMutationId = "Trivi"
 	return payload
-
-	//if bcrypt.Match(payload.Password, hash) { //comprobacion de que matchean
-	//fmt.Println("They match")
-	//}
 
 }
 
 //executes a sign in query in sorare api and returns a type interface query result
-func loadSignInQuery(s string, payload TUser) interface{} {
+func LoadSignInQuery(s string, payload TUser) (SignIn, string, error) {
 
 	client := graphql.NewClient("https://api.sorare.com/graphql")
 
 	req := graphql.NewRequest(s)
 
-	//sign, _ := json.Marshal(payload)
-
 	req.Var("input", payload)
 
 	_, csrf, _ := getSalt()
-	req.Header.Set("x-csrf-token", csrf)
 
+	req.Header.Set("X-CSRF-Token", csrf)
+	req.Header.Set("Content-Type", "application/json")
 	ctx := context.Background()
 
 	var respData SignIn
 	if err := client.Run(ctx, req, &respData); err != nil {
-		log.Fatal(err)
+		return SignIn{}, "", err
 
 	}
+	return respData, csrf, nil
 
+}
+
+// devuelve una lista con todos los blockchainIds de todas las pending offers
+// introducimos un tipo current user
+func GetListPendingOffer(cU TCUser) (listPendingOffers []string) {
+
+	pendOffersIds := cU.PendingDirectOffersSent.Nodes
+	for _, n := range pendOffersIds {
+
+		listPendingOffers = append(listPendingOffers, n.BlockchainId)
+	}
+	return listPendingOffers
+
+}
+
+func DeletePendingOffer(s string, jwt string, cancelPayload TCancelPayload, listPendingOffersToDelete []string) Cancel {
+
+	client := graphql.NewClient("https://api.sorare.com/graphql")
+
+	var respData Cancel
+
+	for i := 0; i <= len(listPendingOffersToDelete); i++ {
+		cancelPayload.BlockchainId = listPendingOffersToDelete[i]
+
+		req := graphql.NewRequest(s)
+		req.Var("input2", cancelPayload)
+
+		//req.Header.Set("X-CSRF-Token", csrf)
+		req.Header.Set("Content-Type", "application/json")
+
+		bearer := "Bearer " + jwt
+		fmt.Println(bearer)
+		req.Header.Set("Authorization", bearer)
+		req.Header.Set("JWT_AUD", AUD)
+		ctx := context.Background()
+
+		if err := client.Run(ctx, req, &respData); err != nil {
+			log.Fatal(err)
+
+		}
+		fmt.Println("RESPDATA:", respData)
+	}
 	return respData
-
 }

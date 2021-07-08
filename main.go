@@ -1,6 +1,6 @@
 package main
 
-import "fmt"
+//"net/http"
 
 //"context"
 //"encoding/json"
@@ -13,122 +13,38 @@ import "fmt"
 
 func main() {
 
-	/*salt, csrf, cookie := getSalt() //salt in bytes
-	s := readSalt(salt)             //salt in struct
+	//pendingOfferList := getListPendingOffer(resp.SignIn.CurrentUser)
 
-	pass := os.Getenv("BACKEND_PASSWORD")
-	//pass := "addasdasasd"
-	// hash and verify a password with a static salt
-	hash, _ := bcrypt.Hash(pass, s.Salt)
+	//fmt.Printf("%+v\n", pendingOfferList)
 
-	if bcrypt.Match(pass, hash) {
-		fmt.Println("They match")
-	}
+	//var cancelPayload TCancelPayload
 
-	client := graphql.NewClient("https://api.sorare.com/graphql")
+	//resp2 := deletePendingOffer(CANCELOFFERPENDING_MUTATION, csrf, cookie, cancelPayload, pendingOfferList)
 
-	// make a request
-	/*req := graphql.NewRequest(`{
-	    	card (slug:"cristiano-ronaldo-dos-santos-aveiro-2020-rare-10" ) {
-	        	 	id
-	            	name
-	            	onSale
-					age
-	        	}
-	    	}
-		`)*/
+	//fmt.Printf("%+v\n", resp2)
+	//respuesta := LogRequest()
+	//fmt.Println(respuesta)
 
-	/*reqCR := graphql.NewRequest(`
-		query ($value: String!) {
-			card (slug:$value ) {
-				id
-			    name
-			    onSale
-			    age
-		    }
-		}
-
-	`)
-
-	reqCR.Var("value", "cristiano-ronaldo-dos-santos-aveiro-2020-rare-10")
-	//cogemos las variables de entorno
-	ctxCR := context.Background()
-
-	var respDataCR sCard
-	if err := client.Run(ctxCR, reqCR, &respDataCR); err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("%+v\n", respDataCR)*/
-
-	/****************************************************************************************/
-
-	/*mail := os.Getenv("BACKEND_USER")
-		//pass := os.Getenv("BACKEND_PASSWORD")
-
-		req := graphql.NewRequest(`
-			mutation SignInMutation($input: signInInput!) {
-				signIn(input: $input) {
-			  		currentUser {
-						slug
-						coinBalance
-			  		}
-			  		errors {
-						message
-			  		}
+	/*jsonData := map[string]string{
+		"query": `
+			{
+				people {
+					firstname,
+					lastname,
+					website
 				}
-		  	}
-		`)
-		// set any variables
-		//req.Var("value", "cristiano-ronaldo-dos-santos-aveiro-2020-rare-10")
-		//valor := "{" + "email" + ":" + mail + "," + " " + "password" + ": " + hash + "}"
-		//valor := {email: rufusduff6517@gmail.com, password: $2a$11$pti0jyxjdJPKaC0t720OSOA1qIJ8zDdBmkTwDrx9202Oz/xnOplNO}
-		//fmt.Println(valor)
-
-		var payload TUser
-		payload.Email = mail
-		payload.Password = hash
-
-		sign, _ := json.Marshal(payload)
-
-		//fmt.Printf("%+v\n", payload)
-		fmt.Println(string(sign))
-		req.Var("input", payload) //metemos email and password hashed
-		// set header fields
-
-		//fmt.Println("CSRF:", csrf)
-		fmt.Println("COOKIE:", cookie)
-		req.Header.Set("x-csrf-token", csrf)
-
-		// define a Context for the request
-		ctx := context.Background()
-
-		//var graphqlResponse interface{}
-		//var respData sCard
-		var respData SignIn
-		if err := client.Run(ctx, req, &respData); err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("%+v\n", respData)
-
-	}*/
-
-	payload := setPayload()
-
-	resp := loadSignInQuery(`mutation SignInMutation($input: signInInput!) {
-    signIn(input: $input) {
-      currentUser {
-        slug
-		email
-		ethereumAddress
-		availableBalance
-		nickname
-      }
-      errors {
-        message
-      }
-    }
-  }`, payload)
-
-	fmt.Printf("%+v\n", resp)
-
+			}
+		`,
+	}
+	jsonValue, _ := json.Marshal(jsonData)
+	fmt.Println(jsonData)
+	request, _ := http.NewRequest("POST", "https://<GRAPHQL_API_HERE>", bytes.NewBuffer(jsonValue))
+	client := &http.Client{Timeout: time.Second * 10}
+	response, err := client.Do(request)
+	defer response.Body.Close()
+	if err != nil {
+		fmt.Printf("The HTTP request failed with error %s\n", err)
+	}
+	data, _ := ioutil.ReadAll(response.Body)
+	fmt.Println(string(data))*/
 }
