@@ -7,12 +7,25 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestSetPayload(t *testing.T) {
+
+	assert := assert.New(t)
+
+	//Test correct
+	payload := SetPayload()
+	resp, _, err := LoadSignInQuery(LOGIN_JWT, payload)
+	fmt.Printf("%+v\n", resp)
+	assert.Nil(err)
+	assert.Equal("tim-appleton", resp.SignIn.CurrentUser.Slug)
+
+}
+
 func TestLoadSignInQuery(t *testing.T) {
 
 	assert := assert.New(t)
 
 	//Test correct login
-	payload := setPayload()
+	payload := SetPayload()
 	resp, _, err := LoadSignInQuery(LOGIN_JWT, payload)
 	fmt.Printf("%+v\n", resp)
 	assert.Nil(err)
@@ -32,7 +45,7 @@ func TestGetListPendingOffer(t *testing.T) {
 	assert := assert.New(t)
 
 	//Test correct delete
-	payload := setPayload()
+	payload := SetPayload()
 	resp, _, err := LoadSignInQuery(LOGIN_JWT, payload)
 	lpo := GetListPendingOffer(resp.SignIn.CurrentUser)
 	fmt.Printf("%+v\n", lpo)
@@ -44,7 +57,7 @@ func TestDeletePendingOffer(t *testing.T) {
 	assert := assert.New(t)
 	var cp TCancelPayload
 	//Test correct delete
-	payload := setPayload()
+	payload := SetPayload()
 	resp, _, err := LoadSignInQuery(LOGIN_JWT, payload)
 	lpo := GetListPendingOffer(resp.SignIn.CurrentUser)
 	cOferr := DeletePendingOffer(CANCELOFFERPENDING_MUTATION, resp.SignIn.CurrentUser.JwtToken.Token, cp, lpo)

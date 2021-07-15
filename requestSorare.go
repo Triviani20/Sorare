@@ -79,7 +79,7 @@ func LoginRequest() (string, error) {
 		return "", err
 	}
 
-	_, csrf, cookie := getSalt()
+	_, csrf, cookie := GetSalt()
 	request.AddCookie(cookie)
 	request.Header.Add("X-CSRF-Token", csrf)
 	request.Header.Add("Content-Type", "application/json")

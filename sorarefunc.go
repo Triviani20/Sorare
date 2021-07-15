@@ -14,7 +14,7 @@ import (
 )
 
 // make a get and take a salt, a csrf and a cookie
-func getSalt() ([]byte, string, *http.Cookie) {
+func GetSalt() ([]byte, string, *http.Cookie) {
 
 	var cookie *http.Cookie
 	buser := os.Getenv("BACKEND_USER")
@@ -50,7 +50,7 @@ func getSalt() ([]byte, string, *http.Cookie) {
 }
 
 // retuns s of type Salt
-func readSalt(salt []byte) (s Salt) {
+func ReadSalt(salt []byte) (s Salt) {
 
 	err := json.Unmarshal(salt, &s)
 
@@ -62,11 +62,10 @@ func readSalt(salt []byte) (s Salt) {
 }
 
 //Create a payload with email and pass hashed info
-func setPayload() (payload TUser) {
+func SetPayload() (payload TUser) {
 
-	salt, _, _ := getSalt() //salt in bytes
-	//fmt.Printf("COOKIE: %+v\n", c)
-	s := readSalt(salt) //salt in struct
+	salt, _, _ := GetSalt() //salt in bytes
+	s := ReadSalt(salt)     //salt in struct
 
 	payload.Email = os.Getenv("BACKEND_USER")
 	payload.Password = os.Getenv("BACKEND_PASSWORD")
@@ -86,7 +85,7 @@ func LoadSignInQuery(s string, payload TUser) (SignIn, string, error) {
 
 	req.Var("input", payload)
 
-	_, csrf, _ := getSalt()
+	_, csrf, _ := GetSalt()
 
 	req.Header.Set("X-CSRF-Token", csrf)
 	req.Header.Set("Content-Type", "application/json")
@@ -101,8 +100,7 @@ func LoadSignInQuery(s string, payload TUser) (SignIn, string, error) {
 
 }
 
-// devuelve una lista con todos los blockchainIds de todas las pending offers
-// introducimos un tipo current user
+// returs a list with all pending offers
 func GetListPendingOffer(cU TCUser) (listPendingOffers []string) {
 
 	pendOffersIds := cU.PendingDirectOffersSent.Nodes
@@ -120,7 +118,7 @@ func DeletePendingOffer(s string, jwt string, cancelPayload TCancelPayload, list
 
 	var respData Cancel
 
-	for i := 0; i <= len(listPendingOffersToDelete); i++ {
+	for i := 0; i < len(listPendingOffersToDelete); i++ {
 		cancelPayload.BlockchainId = listPendingOffersToDelete[i]
 
 		req := graphql.NewRequest(s)
@@ -130,7 +128,6 @@ func DeletePendingOffer(s string, jwt string, cancelPayload TCancelPayload, list
 		req.Header.Set("Content-Type", "application/json")
 
 		bearer := "Bearer " + jwt
-		fmt.Println(bearer)
 		req.Header.Set("Authorization", bearer)
 		req.Header.Set("JWT_AUD", AUD)
 		ctx := context.Background()

@@ -9,7 +9,7 @@ const SIGNIN_MUTATION = `mutation SignInMutation($input: signInInput!) {
         	email
 			ethereumAddress
 			availableBalance
-			pendingDirectOffersSent(first: 5){
+			pendingDirectOffersSent(first: 6){
         		nodes{
            			blockchainId
           		}
@@ -164,7 +164,7 @@ const LOGIN_JWT = `mutation SignInMutation($input: signInInput!) {
         	email
 			ethereumAddress
 			availableBalance
-			pendingDirectOffersSent(first: 5){
+			pendingDirectOffersSent(first: 20){
         		nodes{
            			blockchainId
           		}
